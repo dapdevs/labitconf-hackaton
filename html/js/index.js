@@ -1,8 +1,13 @@
+// 
+var _account, _contractInstance;
+
 // web3 provider with fallback for old version
 window.addEventListener('load', async() => {
     // New web3 provider
     if (window.ethereum) {
-        window.web3 = new Web3(ethereum);
+        window.web3 = new Web3(window.ethereum);
+        const accounts = await web3.eth.getAccounts();
+        _account = accounts[0];
         try {
             // ask user for permission
             await ethereum.enable();
@@ -11,12 +16,14 @@ window.addEventListener('load', async() => {
             // user rejected permission
             console.log('user rejected permission');
         }
+        connectContract();
     }
-    // Old web3 provider
-    else if (window.web3) {
-        window.web3 = new Web3(web3.currentProvider);
-        // no need to ask for permission
-    }
+    // // Old web3 provider
+    // else if (window.web3) {
+    //     console.log('Old web3 provider detected');
+    //     window.web3 = new Web3(web3.currentProvider);
+    //     // no need to ask for permission
+    // }
     // No web3 provider
     else {
         console.log('No web3 provider detected');
@@ -972,21 +979,39 @@ var abi = JSON.parse(`[
 `);
 // 
 //contract instance
-contract = new web3.eth.Contract(abi, contractAddress);
+function connectContract() {
+    _contractInstance = new web3.eth.Contract(abi, contractAddress);
+    console.log(_contractInstance);
+}
 
 // Accounts
-var account;
+// var account;
 
-web3.eth.getAccounts(function(err, accounts) {
-    if (err != null) {
-        alert("Error retrieving accounts.");
-        return;
-    }
-    if (accounts.length == 0) {
-        alert("No account found! Make sure the Ethereum client is configured properly.");
-        return;
-    }
-    account = accounts[0];
-    console.log('Account: ' + account);
-    web3.eth.defaultAccount = account;
-});
+// 
+
+// 
+
+// web3.eth.getAccounts(function(err, accounts) {
+//     if (err != null) {
+//         alert("Error retrieving accounts.");
+//         return;
+//     }
+//     if (accounts.length == 0) {
+//         alert("No account found! Make sure the Ethereum client is configured properly.");
+//         return;
+//     }
+//     account = accounts[0];
+//     console.log('Account: ' + account);
+//     web3.eth.defaultAccount = account;
+// });
+
+
+async function getName() {
+    connectContract();
+    console.log(window.web3);
+    console.log(_contractInstance);
+    console.log(_account);
+    _contractInstance.methods.name().send({ from: _account }).then(function(res) {
+        console.log("name: ", res);
+    });
+}
