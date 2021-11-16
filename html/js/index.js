@@ -1014,7 +1014,7 @@ async function getName() {
     _contractInstance.methods.name().send({ from: _account }).then(function(res) {
         console.log("name: ", res);
     });
-    _contractInstance.methods.symbol().send({ from: _account }).then(function(res) {
+    _contractInstance.methods.symbol().call().then(function(res) {
         console.log("symbol: ", res);
     });
 }
