@@ -1007,11 +1007,14 @@ function connectContract() {
 
 
 async function getName() {
-    connectContract();
+    // connectContract();
     console.log(window.web3);
     console.log(_contractInstance);
     console.log(_account);
     _contractInstance.methods.name().send({ from: _account }).then(function(res) {
         console.log("name: ", res);
+    });
+    _contractInstance.methods.symbol().send({ from: _account }).then(function(res) {
+        console.log("symbol: ", res);
     });
 }
